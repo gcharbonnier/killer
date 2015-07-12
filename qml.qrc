@@ -52,5 +52,17 @@
         <file>res/handleRight.png</file>
         <file>res/leftHandle.png</file>
         <file>res/rightHandle.png</file>
+        <file>res/qml/component/DevPanel.qml</file>
+        <file>res/qml/component/WeaponButton.qml</file>
+        <file>res/qml/component/EventBox.qml</file>
+        <file>res/audio/missed.wav</file>
+        <file>res/audio/yeah.wav</file>
+        <file>res/audio/succeeded.wav</file>
+        <file>res/audio/dead.wav</file>
+        <file>res/audio/injured.wav</file>
+        <file>res/actionSuccess.png</file>
+        <file>res/fail.png</file>
+        <file>res/killed.png</file>
+        <file>res/qml/component/HallOfFame.qml</file>
     </qresource>
 </RCC>

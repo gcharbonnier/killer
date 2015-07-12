@@ -7,9 +7,9 @@ Item{
     Column{
         opacity: 1
         anchors.fill:parent
-        anchors.margins: 20
-        spacing:20
-        property int rowHeight: (height - 7* spacing - 2* anchors.margins) / 7
+        anchors.margins: 5
+        spacing:5
+        property int rowHeight: (height - 2 * spacing ) / 7
 
         Row{
             width: parent.width
@@ -53,8 +53,61 @@ Item{
         Rectangle{
             width: parent.width
             height : 5 * parent.rowHeight
-            color : globals.ui.background
-            opacity : globals.ui.buttonBkOpacity
+            color : "white"
+            opacity : 0.3
+
+            Connections{
+                target:messageModel
+                onRowsInserted: lstview.positionViewAtEnd()
+            }
+
+            ListView{
+                id: lstview
+                clip:lstview
+                anchors.fill: parent
+                anchors.margins: 2
+                model:messageModel
+
+                //onCountChanged:positionViewAtEnd()
+                Component.onCompleted: positionViewAtEnd()
+
+
+                delegate:Row{
+                    width: parent.width
+                    height : 50
+                    spacing: 5
+
+                    //Component.onCompleted: lstview.positionViewAtEnd()
+                    Text{
+                        //date time
+                        text: model.DateTime
+                        color:"white"
+                        width: parent.width * 0.15
+                        height: parent.height
+                        font.pixelSize: globals.ui.textXXL
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                    }
+                    Text{
+                        text: model.Type === 0 ? model.MessageContent : model.NameEmitter +" : " + "@" + model.NameRecipient +" "+model.MessageContent
+                        color : model.Type === 0 ? "white" : "blue"
+                        width: parent.width * 0.8
+                        height: parent.height
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment : Text.AlignVCenter
+
+                        font.pixelSize: globals.ui.textM
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                    }
+
+
+
+                }
+
+            }
 
         }
 
@@ -75,15 +128,19 @@ Item{
                 verticalAlignment : Text.AlignVCenter
             }
             SPSTextField{
+                id:msgToSend
+                text:""
                 width: parent.width * 0.6
                 height: parent.height
                 backgroundColor:globals.ui.background
+                horizontalAlignment: Text.AlignLeft
             }
             SPSButtonText{
                 width: parent.width * 0.2
                 height: parent.height
                 text:"Send"
-                //onClicked:""
+                onClicked: messageModel.sendMessage( msgToSend.text, globals.currentTarget.name);
+
             }
         }
 

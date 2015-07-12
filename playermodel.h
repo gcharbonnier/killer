@@ -9,7 +9,7 @@
 
 struct PlayerData
 {
-    PlayerData(){}
+    PlayerData(){    }
     PlayerData(uint _ID, QString _Name, int _Distance, int _Azimuth, int heading, int type, double lat, double lng){
         ID = _ID;
         Distance = _Distance;
@@ -32,7 +32,7 @@ struct PlayerData
     int Azimuth = -1;
     double Latitude = 0.;
     double Longitude = 0.;
-    QString NamePlayer = "";
+    QString NamePlayer = "Invalid";
     QVariant getRole(int role) const;
 
     enum Roles {
@@ -76,11 +76,19 @@ public:
     //void setMyId( uint id);
     int maxDistance(){ return m_maxDistance;}
 
-    const PlayerData& getPlayerData(int PlayerID){
-        int row = indexFromIdPlayer( PlayerID ).row();
-        return m_lstValues.at( row);
+    PlayerData getPlayerData(int PlayerID){
+        QModelIndex index = indexFromIdPlayer( PlayerID );
+        if (index.isValid() && index.row() < m_lstValues.size())
+            return m_lstValues.at( index.row());
+        else
+        {
+            return PlayerData();
+        }
     }
 
+signals:
+    void newPlayer(QString playerName);
+    void playerLeave(QString playerName);
 
 protected:
     QHash<int, QByteArray> roleNames() const;

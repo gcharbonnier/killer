@@ -12,24 +12,19 @@ Item{
     property int menuEntryHeight : Math.floor(mainWnd.height / 8)
     property int menuEntrySpacing : 50
 
-    function randomGeometry( obj)
-    {
-        obj.x = Math.floor(Math.random() * 800);//Math.floor((Math.random() * width) + 1);
-        obj.y = Math.floor(Math.random() * 800);//Math.floor((Math.random() * height) + 1);
-        obj.rotation = Math.floor((Math.random() * 90) + 1);
-        //obj.opacity = 0;
+    Component.onCompleted: {
+        root.state = "ready";
     }
 
-    Component.onCompleted: {
-
-
-        randomGeometry(menuCreateCampaign);
-        randomGeometry(menuJoinCampaign);
-        randomGeometry(menuRegister);
-        randomGeometry(menuLogin);
-        randomGeometry(menuQuit);
-
-        root.state = "ready";
+    Text{
+        text:"Dev Panel"
+        anchors.right : parent.right
+        anchors.top : parent.top
+        visible: mainWnd.isDev
+        MouseArea{
+            anchors.fill: parent
+            onClicked: loader.source = "DevPanel.qml"
+        }
     }
 
     SPSButtonText{
@@ -37,6 +32,9 @@ Item{
         width : menuEntryWidth
         height: menuEntryHeight
         visible: accountModel.isLogged
+        x:(parent.width - menuEntryWidth) / 2
+        y: (1.14 * menuEntryHeight) * 2
+        opacity:0
         text: "Create campaign"
         onClicked: mainPanel.state="CreateCampaign"
     }
@@ -45,6 +43,9 @@ Item{
         id:menuJoinCampaign
         text:"join campaign"
         visible: accountModel.isLogged
+        x:menuCreateCampaign.x
+        y: (1.14 * menuEntryHeight) * 3
+        opacity:0
         width : menuEntryWidth
         height: menuEntryHeight
         onClicked: mainPanel.state="JoinCampaign"
@@ -56,12 +57,13 @@ Item{
         width : menuEntryWidth
         height: menuEntryHeight
         visible: !accountModel.isLogged
+        opacity:0
+        x:menuCreateCampaign.x
+        y: (1.14 * menuEntryHeight) * 1
         onClicked: {
             mainPanel.state="RegisterPage"
             loader.item.register = true;
         }
-
-
 
     }
     SPSButtonText{
@@ -69,6 +71,9 @@ Item{
         text: accountModel.isLogged ? "Logout" : "Login"
         width : menuEntryWidth
         height: menuEntryHeight
+        x:menuCreateCampaign.x
+        y:(1.14 * menuEntryHeight) * 5
+        opacity:0
         onClicked: {
             if (accountModel.isLogged)
             {
@@ -87,17 +92,18 @@ Item{
         id:menuQuit
         color:"white"
         border.color:"black"
-        border.width: 5
+        border.width: 1
         radius : 10
-        width:150
-        height:150
-        opacity:0.7
+        width: height
+        height:Math.min(150,root.height*0.15)
+        opacity:0
+        x :  parent.width - width
+        y :  parent.height - height
 
         Image{
             source:"qrc:/res/exit.png"
             anchors.fill: parent
-            anchors.margins: 20
-            opacity: 1
+            anchors.margins: Math.min(20,menuQuit.height*0.15)
         }
 
         MouseArea{
@@ -107,45 +113,22 @@ Item{
 
     }
 
-
-    Text{
-        id:reloadAnim
-
-        text:"Test"
-        color:"black"
-        font.pixelSize: 150
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-
-
-        MouseArea{
-            anchors.fill: parent
-            onClicked: {
-                if (root.state == "")
-                    root.state = "ready";
-                else root.state = "";
-            }
-        }
-
-    }
-
-
     states: [
 
 
             State {
                 name: "ready"
-                PropertyChanges { target:menuCreateCampaign;  rotation :0 ; x:(parent.width - menuEntryWidth) / 2 ; y: (1.14 * menuEntryHeight) * 2}
-                PropertyChanges { target:menuJoinCampaign;  rotation :0 ; x:menuCreateCampaign.x ; y: (1.14 * menuEntryHeight) * 3}
-                PropertyChanges { target:menuRegister; rotation :0 ; x:menuCreateCampaign.x ; y: (1.14 * menuEntryHeight) * 1}
-                PropertyChanges { target:menuLogin; rotation :0 ; x:menuCreateCampaign.x ; y:(1.14 * menuEntryHeight) * 5}
-                PropertyChanges { target:menuQuit; rotation :0; x :  parent.width - width; y :  parent.height - height}
+                PropertyChanges { target:menuCreateCampaign;  opacity :1 }
+                PropertyChanges { target:menuJoinCampaign;  opacity :1 }
+                PropertyChanges { target:menuRegister; opacity :1 }
+                PropertyChanges { target:menuLogin; opacity :1 }
+                PropertyChanges { target:menuQuit; opacity :0.7 }
             }
 
         ]
 
     transitions: Transition {
-                PropertyAnimation { properties: "x, y, rotation"; duration:2000;easing.type: Easing.InOutQuad }
+                PropertyAnimation { properties: "opacity"; duration:2000;easing.type: Easing.InOutQuad }
 
 
         }

@@ -2,25 +2,18 @@ import QtQuick 2.0
 
 Rectangle{
     id:menuSelector
-    property int maximizedWidth: mainWnd.width / 2
-    property int maximizedheight: mainWnd.height
+    property int maximizedWidth: 300
+    property int maximizedheight: 300
     property var model: null
     property var stack: null
 
     layer.enabled: false
-    width: height
-    height: parent.height - 2 * anchors.margins
-    radius:20
+
+    radius:Math.min(20, height * globals.ui.buttonRadiusPercHeight)
     opacity:0.8
     border.width: 0
     color: globals.ui.buttonMenuBkColor
 
-    anchors{
-        right: parent.right
-        top: parent.top
-        //bottom: parent.bottom
-        margins: 20
-    }
 
     Component.onCompleted: {
         content.stack.push({item:Qt.resolvedUrl(model.get(0).componentUrl), replace:true});
@@ -30,7 +23,7 @@ Rectangle{
     Image{
         id:menuimg
         anchors.fill: parent
-        anchors.margins: 15
+        anchors.margins: Math.min(15, menuSelector.height * 0.05)
         //anchors.margins: 20
         source: repeaterMenu.currentData.imageSource ? repeaterMenu.currentData.imageSource : "qrc:/res/menu.png"
     }
@@ -57,12 +50,12 @@ Rectangle{
 
         Grid{
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins:Math.min(20, menuSelector.height*0.05)
             rows:3
             columns:3
-            spacing: 20
-            property int ceilWidth: (width - 2*anchors.margins- (columns-1)*spacing)/columns
-            property int ceilHeight: (height - 2*anchors.margins- (rows-1)*spacing)/rows
+            spacing: Math.min(20, height*0.05)
+            property int ceilWidth: (width - (columns-1)*spacing)/columns
+            property int ceilHeight: (height - (rows-1)*spacing)/rows
 
             Repeater{
                 id:repeaterMenu
@@ -72,12 +65,28 @@ Rectangle{
                     width: parent.ceilWidth
                     height:parent.ceilHeight
                     color:globals.ui.buttonMenuBkColor
-                    radius:20
+                    radius: Math.min(20, height * globals.ui.buttonRadiusPercHeight)
                     Image{
                         source: imageSource
                         anchors.fill: parent
-                        anchors.margins: 20
+                        anchors.margins: Math.min(20, menuSelector.height*0.05)
                     }
+                    Text
+                    {
+                        id: embText
+                        text: label
+                        enabled: parent.enabled
+                        anchors.fill: parent
+                        anchors.margins: globals.ui.buttonMargin
+                        color: "black"//globals.ui.textcolor
+                        font.pixelSize: globals.ui.textM
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                        font.family: "Syncopate"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                    }
+
                     MouseArea{
                         anchors.fill: parent
                         propagateComposedEvents: true
@@ -97,11 +106,25 @@ Rectangle{
                 width: parent.ceilWidth
                 height:parent.ceilHeight
                 color: globals.ui.buttonMenuBkColor
-                radius:20
+                radius: Math.min(20, height * globals.ui.buttonRadiusPercHeight)
                 Image{
                     source:"qrc:/res/close.png"
                     anchors.fill: parent
-                    anchors.margins: 20
+                    anchors.margins: Math.min(20, menuSelector.height*0.05)
+                }
+                Text
+                {
+                    text: "Quit campaign"
+                    enabled: parent.enabled
+                    anchors.fill: parent
+                    anchors.margins: globals.ui.buttonMargin
+                    color: "black"//globals.ui.textcolor
+                    font.pixelSize: globals.ui.textM
+                    minimumPixelSize: globals.ui.minimumPixelSize
+                    fontSizeMode : Text.Fit
+                    font.family: "Syncopate"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment : Text.AlignVCenter
                 }
                 MouseArea{
                     anchors.fill: parent

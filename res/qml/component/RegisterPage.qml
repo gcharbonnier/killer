@@ -23,11 +23,12 @@ Item{
             PropertyAnimation { properties: "scale"; duration:1000;easing.type: Easing.InOutQuad }
         }
 
+        property int rowHeight : Math.min(100,height *0.10)
 
         Rectangle {
             id:mainPage         //This is a corner rounded rectangle
             width: parent.width
-            height: parent.height - 150
+            height: parent.height - parent.rowHeight * 2
 
             visible: true
             opacity:0.8
@@ -54,7 +55,7 @@ Item{
             Column{
                 id:content
                 anchors.fill : parent
-                anchors.margins: 50
+                anchors.margins: container.rowHeight * 0.5
                 property int rowHeight : Math.floor( Math.min(100,height /7))
                 spacing: 5
                 Text{
@@ -74,7 +75,7 @@ Item{
                 }
 
                 Row{
-                    spacing:50
+                    spacing:container.rowHeight * 0.5
                     width: parent.width
                     height:parent.rowHeight
                     Text{
@@ -107,7 +108,7 @@ Item{
 
                     Rectangle{
                         //margin
-                        width: 50
+                        width: container.rowHeight * 0.5
                         height: parent.height
                         opacity:0
                     }
@@ -133,7 +134,7 @@ Item{
 
 
                 Row{
-                    spacing:150
+                    spacing:container.rowHeight * 1.5
                     width: parent.width
                     height:parent.rowHeight
 
@@ -175,7 +176,7 @@ Item{
 
                     Rectangle{
                         //margin
-                        width: 50
+                        width: container.rowHeight * 0.5
                         height: parent.height
                         opacity:0
                     }
@@ -205,7 +206,7 @@ Item{
 
         SPSButtonText{
             width: parent.width * 0.4
-            height: Math.min(100,parent.height *0.1)
+            height: parent.rowHeight
             anchors.left: parent.left
             anchors.bottom : parent.bottom
             text:"Cancel"
@@ -215,7 +216,7 @@ Item{
         SPSButtonText{
             id:registerButton
             width: parent.width * 0.4
-            height:Math.min(100,parent.height *0.1)
+            height: parent.rowHeight
             anchors.right: parent.right
             anchors.bottom : parent.bottom
             enabled: register ? !accountExists : accountExists

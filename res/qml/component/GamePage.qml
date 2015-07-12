@@ -1,16 +1,7 @@
-
-import QtQuick 2.2
-import QtQuick.Controls 1.2
-import QtQuick.Controls.Styles 1.1
-
-
+import QtQuick 2.4
 
 Item {
-    /*gradient: Gradient{
-        GradientStop { position: 0.0; color: "#dd000000" }
-        GradientStop { position: 0.3; color: "#aa000000" }
-        GradientStop { position: 1.0; color: "transparent" }
-    }*/
+
 
     anchors.fill: parent
 
@@ -50,45 +41,36 @@ Item {
     Connections {
         target: gameManager
         onKilledBy: {
-            notificationBox.color="red";
-            notificationBox.text="You have been killed by "+killer;
+            notificationBox.showMessage("You have been shooted by "+killer,21);
+            if (globals.perso.health < 0)
+            {
+                notificationBox.displayMessage("You have been killed by "+killer,100);
+
+            }
         }
         onKilled: {
-            notificationBox.color="green";
-            notificationBox.text="You killed "+victim;
+            //notificationBox.color="green";
+            //notificationBox.text="You killed "+victim;
+        }
+    }
+    Connections {
+        target: playerModel
+        onNewPlayer: {
+            notificationBox.showMessage(playerName + " joined the campaign !",1);
+        }
+        onPlayerLeave:{
+            notificationBox.showMessage(playerName + " left the campaign !",1);
         }
     }
 
-    Rectangle{
+    EventBox{
         id:notificationBox
-        color:"grey"
-        opacity:0
-        radius : 50
+        radius : Math.min(50, height*0.1)
         anchors.fill: parent
-        anchors.margins: 50
-        visible: true
-        property alias text: notificationMessage.text
-        z:100
-
-        Text {
-            id:notificationMessage
-            anchors.centerIn: parent
-            font.pixelSize: 50
-        }
-
-        onTextChanged: {
-            showMessage.restart();
-        }
-        SequentialAnimation {
-               id: showMessage
-               running: false
-               NumberAnimation { target: notificationBox; property: "opacity"; to: 1.0; duration: 100}
-               NumberAnimation { target: notificationBox; property: "opacity"; to: 0.0; duration: 5000}
-
-           }
-
-
+        anchors.margins: Math.min(50, parent.height*0.1)
     }
+
+
 
 
 }

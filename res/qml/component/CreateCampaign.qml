@@ -39,10 +39,12 @@ Item{
             PropertyAnimation { properties: "scale"; duration:1000;easing.type: Easing.InOutQuad }
         }
 
+        property int rowHeight : Math.min(100,height *0.10)
+
         Rectangle {
             id:mainPage
             width: parent.width
-            height: parent.height - 150
+            height: parent.height - container.rowHeight * 2
 
             visible: true
             opacity:0.8
@@ -66,7 +68,7 @@ Item{
             {
                 id:content
                 anchors.fill : parent
-                anchors.margins: 50
+                anchors.margins: container.rowHeight * 0.5
                 property int rowHeight : Math.floor( Math.min(100, (height - 6 * spacing) /7))
                 spacing: 5
 
@@ -92,8 +94,8 @@ Item{
                         text: parent.name
                         height:content.rowHeight
                         width: parent.width * 0.4
+                        onTextChanged: campaignName.name = text;
 
-                        onEditingFinished: campaignName.name = text;
                     }
 
                 }
@@ -124,59 +126,6 @@ Item{
                         height:content.rowHeight
                     }
 
-                    /*
-                    Rectangle{
-                        id:prev
-                        radius:20
-                        width:parent.width * 0.1
-                        height:content.rowHeight
-                        color: globals.ui.buttonBkColor
-
-                        Text{
-                            text:"<<"
-                            anchors.centerIn: parent
-                            font.pixelSize: globals.ui.textXL
-                            color: globals.ui.textcolor
-                        }
-                        MouseArea{
-                            anchors.fill: parent
-                            onClicked: campaignType.previous();
-                        }
-                    }
-                    Repeater{
-
-                        //id:campaignType
-                        model: campaignTypeModel
-                        delegate: Text{
-                            width:parent.width * 0.2
-                            height: parent.rowHeight
-                            visible: index == campaignType.currentSelection
-                            text: model.label
-                            anchors.verticalCenter: parent.verticalCenter
-                            font.pixelSize: globals.ui.textXL
-                            color: globals.ui.textcolor
-                            minimumPixelSize: globals.ui.minimumPixelSize
-                            fontSizeMode : Text.Fit
-                        }
-                    }
-
-                    Rectangle{
-                        id:next
-                        width:parent.width * 0.1
-                        radius:20
-                        height:content.rowHeight
-                        color: globals.ui.buttonBkColor
-                        Text{
-                            text:">>"
-                            anchors.centerIn: parent
-                            font.pixelSize: globals.ui.textXL
-                            color: globals.ui.textcolor
-                        }
-                        MouseArea{
-                            anchors.fill: parent
-                            onClicked: campaignType.next();
-                        }
-                    }*/
                 }
 
                 Row{
@@ -273,8 +222,8 @@ Item{
         }
 
         SPSButtonText{
-            width: parent.width * 0.4
-            height: Math.min(100,parent.height *0.1)
+            width: parent.width * 0.3
+            height: container.rowHeight
             anchors.left: parent.left
             anchors.bottom : parent.bottom
             text:"Cancel"
@@ -282,10 +231,11 @@ Item{
         }
 
         SPSButtonText{
-            width: parent.width * 0.4
-            height:Math.min(100,parent.height *0.1)
-            anchors.right: parent.right
+            width: parent.width * 0.3
+            height:container.rowHeight
+            anchors.right: removeButton.left
             anchors.bottom : parent.bottom
+            anchors.rightMargin: parent.width *0.05
             color:enabled ? globals.ui.buttonBkColor : "grey"
             text: campaignId === 0 ? "Create" : "Modify"
             onClicked: {
@@ -296,6 +246,21 @@ Item{
                 }
                 else
                     showError();
+            }
+
+        }
+        SPSButtonText{
+            id:removeButton
+            width: parent.width * 0.3
+            height:container.rowHeight
+            anchors.right: parent.right
+            anchors.bottom : parent.bottom
+            color:"red"
+            text: "Remove"
+            visible: campaignId != 0
+            onClicked: {
+                campaignModel.deleteCampaign(campaignId);
+                mainPanel.state=""
             }
 
         }

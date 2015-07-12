@@ -2,13 +2,19 @@ import QtQuick 2.0
 
 Rectangle {
     color:"darkgrey"
+    property real minValue : 0
     property real maxValue : 100
     property real value : 0
     property bool showAsPerc : true
     property alias sourceSymbol : symbol.source
+    property string prefixText : ""
+    //property alias backgroundColor : color
+    property alias foregroundColor : progress.color
+
 
     Rectangle{
-        property int margins : 5
+        id:progress
+        property int margins : 2
         x: margins
         y: margins
         height : parent.height - 2* margins
@@ -26,8 +32,8 @@ Rectangle {
 
     Text
     {
-        property real percValue : parent.value / parent.maxValue * 100
-        text: parent.showAsPerc ? percValue + " %" : parent.value
+        property real percValue : (parent.value - parent.minValue) / (parent.maxValue - parent.minValue) * 100
+        text: parent.showAsPerc ? parent.prefixText + percValue + " %" : parent.prefixText + parent.value
         id: embText
         anchors.fill: parent
         anchors.margins: globals.ui.buttonMargin

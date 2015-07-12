@@ -1,4 +1,4 @@
-import QtQuick 2.3
+import QtQuick 2.4
 //import QtQuick.Controls 1.2
 
 Item{
@@ -9,8 +9,8 @@ Item{
         id:container            //This item is used to center the content of the page and is scale animated
 
         anchors.centerIn: parent
-        width: parent.width * 0.7
-        height: parent.height * 0.9
+        width: parent.width * 0.85
+        height: parent.height * 0.95
         scale : 0
         Component.onCompleted: state = "Ready";
         states: State {
@@ -21,10 +21,14 @@ Item{
             PropertyAnimation { properties: "scale"; duration:1000;easing.type: Easing.InOutQuad }
         }
 
+        property int rowHeight : Math.min(100,height *0.10)
+
         Rectangle {
             id:mainPage
+            //anchors.fill: parent
+            //anchors.bottomMargin: container.rowHeight * 2
             width: parent.width
-            height: parent.height - 150
+            height: parent.height - 1.1* parent.rowHeight
 
             visible: true
             opacity:0.8
@@ -49,258 +53,227 @@ Item{
                 }
             }
 
+            function campaignTypeName( idType){
+                if (idType === 0)
+                    return "HighLander";
+                else if (idType === 1)
+                    return "Ring of Death";
+            }
+
+            property int nbCol: 7
+            property int nbRow: 6
+            property int spacing: 5
+            property int colSpacing : 5//container.rowHeight * 0.2
+            property int widthCol : ((width  - ( nbCol-3)* colSpacing -10)  / nbCol)
+            property int rowHeight : ((height  - ( nbRow-1)* spacing)  / nbRow)
+
+            Row{
+                id:header
+                width: parent.width
+                height : parent.rowHeight
+                spacing: parent.colSpacing
+                Rectangle{
+                    color:"transparent"
+                    height : parent.height
+                    width: mainPage.widthCol * 3
+                    Text
+                    {
+                        text:"Name (type)"
+                        anchors.fill: parent
+                        anchors.margins: globals.ui.buttonMargin
+                        color: globals.ui.textcolor
+                        font.pixelSize: globals.ui.textXXL
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                        font.family: "Syncopate"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                    }
+
+                }
+                Rectangle{
+                    color:"transparent"
+                    height : parent.height
+                    width: mainPage.widthCol
+                    Text{
+                        text:"Edit"
+                        anchors.fill: parent
+                        anchors.margins: globals.ui.buttonMargin
+                        color: globals.ui.textcolor
+                        font.pixelSize: globals.ui.textM
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                        font.family: "Syncopate"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                    }
+
+                }
+                Rectangle{
+                    color:"transparent"
+                    height : parent.height
+                    width: mainPage.widthCol
+                    Text{
+                        text:"Teams"
+                        anchors.fill: parent
+                        anchors.margins: globals.ui.buttonMargin
+                        color: globals.ui.textcolor
+                        font.pixelSize: globals.ui.textXXL
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                        font.family: "Syncopate"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                    }
+
+                }
+                Rectangle{
+                    color:"transparent"
+                    height : parent.height
+                    width: mainPage.widthCol
+                    Text{
+                        text:"Players"
+                        anchors.fill: parent
+                        anchors.margins: globals.ui.buttonMargin
+                        color: globals.ui.textcolor
+                        font.pixelSize: globals.ui.textXXL
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                        font.family: "Syncopate"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                    }
 
 
-            Column{
-                id:content
-                anchors.fill: parent
-                anchors.margins:50
+                }
+                Rectangle{
+                    color:"transparent"
+                    height : parent.height
+                    width: mainPage.widthCol
+                    Text{
+                        text:""
+                        anchors.fill: parent
+                        anchors.margins: globals.ui.buttonMargin
+                        color: globals.ui.textcolor
+                        font.pixelSize: globals.ui.textM
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                        font.family: "Syncopate"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                    }
 
-                function campaignTypeName( idType){
-                    if (idType === 0)
-                        return "HighLander";
-                    else if (idType === 1)
-                        return "Ring of Death";
                 }
 
 
-                ListView{
-                    id: lstview
-                    width : parent.width
-                    height : parent.height
-                    spacing : 20
+            }
 
-                    property int nbCol: 9
-                    property int nbRow: 7
-                    property int colSpacing : 20
-                    property int widthCol : ((width - 2* content.anchors.margins - ( nbCol-1)* colSpacing)  / nbCol)
-                    property int rowHeight : ((height - 2* content.anchors.margins - ( nbCol-1)* spacing)  / nbRow)
-                    model:campaignModel
-
-
-                    header:
-                        Row{
-
-                        width: parent.width
-                        height : lstview.rowHeight * 2
-                        spacing: lstview.colSpacing
-                            Rectangle{
-                                color:"transparent"
-                                height : parent.height
-                                width: lstview.widthCol * 3
-                                Text
-                                {
-                                    text:"Name (type)"
-                                    anchors.fill: parent
-                                    anchors.margins: globals.ui.buttonMargin
-                                    color: globals.ui.textcolor
-                                    font.pixelSize: globals.ui.textXXL
-                                    minimumPixelSize: globals.ui.minimumPixelSize
-                                    fontSizeMode : Text.Fit
-                                    font.family: "Syncopate"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment : Text.AlignVCenter
-                                }
-
-                            }
-                            Rectangle{
-                                color:"transparent"
-                                height : parent.height
-                                width: lstview.widthCol
-                                Text
-                                {
-                                    text:"Teams"
-                                    anchors.fill: parent
-                                    anchors.margins: globals.ui.buttonMargin
-                                    color: globals.ui.textcolor
-                                    font.pixelSize: globals.ui.textXXL
-                                    minimumPixelSize: globals.ui.minimumPixelSize
-                                    fontSizeMode : Text.Fit
-                                    font.family: "Syncopate"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment : Text.AlignVCenter
-                                }
-
-                            }
-                            Rectangle{
-                                color:"transparent"
-                                height : parent.height
-                                width: lstview.widthCol
-                                Text
-                                {
-                                    text:"Players"
-                                    anchors.fill: parent
-                                    anchors.margins: globals.ui.buttonMargin
-                                    color: globals.ui.textcolor
-                                    font.pixelSize: globals.ui.textXXL
-                                    minimumPixelSize: globals.ui.minimumPixelSize
-                                    fontSizeMode : Text.Fit
-                                    font.family: "Syncopate"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment : Text.AlignVCenter
-                                }
+            ListView{
+                id: lstview
+                clip:lstview
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: header.bottom
+                anchors.bottom : parent.bottom
+                anchors.margins: 5
+                //width : parent.width
+                //height : parent.height
+                //spacing : container.rowHeight * 0.2
 
 
-                            }
-                            Rectangle{
-                                color:"transparent"
-                                height : parent.height
-                                width: lstview.widthCol
-                                Text
-                                {
-                                    text:"Leave"
-                                    anchors.fill: parent
-                                    anchors.margins: globals.ui.buttonMargin
-                                    color: globals.ui.textcolor
-                                    font.pixelSize: globals.ui.textM
-                                    minimumPixelSize: globals.ui.minimumPixelSize
-                                    fontSizeMode : Text.Fit
-                                    font.family: "Syncopate"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment : Text.AlignVCenter
-                                }
+                //headerPositioning : ListView.PullBackHeader// ListView.OverlayHeader
 
-                            }
-                            Rectangle{
-                                color:"transparent"
-                                height : parent.height
-                                width: lstview.widthCol
-                                Text
-                                {
-                                    text:"Edit"
-                                    anchors.fill: parent
-                                    anchors.margins: globals.ui.buttonMargin
-                                    color: globals.ui.textcolor
-                                    font.pixelSize: globals.ui.textM
-                                    minimumPixelSize: globals.ui.minimumPixelSize
-                                    fontSizeMode : Text.Fit
-                                    font.family: "Syncopate"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment : Text.AlignVCenter
-                                }
-
-                            }
-                            Rectangle{
-                                color:"transparent"
-                                height : parent.height
-                                width: lstview.widthCol
-                                Text
-                                {
-                                    text:"Remove"
-                                    anchors.fill: parent
-                                    anchors.margins: globals.ui.buttonMargin
-                                    color: globals.ui.textcolor
-                                    font.pixelSize: globals.ui.textM
-                                    minimumPixelSize: globals.ui.minimumPixelSize
-                                    fontSizeMode : Text.Fit
-                                    font.family: "Syncopate"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment : Text.AlignVCenter
-                                }
-
-                            }
-                            Rectangle{
-                                color:"transparent"
-                                height : parent.height
-                                width: lstview.widthCol
-                                Text
-                                {
-                                    text:"Join"
-                                    anchors.fill: parent
-                                    anchors.margins: globals.ui.buttonMargin
-                                    color: globals.ui.textcolor
-                                    font.pixelSize: globals.ui.textM
-                                    minimumPixelSize: globals.ui.minimumPixelSize
-                                    fontSizeMode : Text.Fit
-                                    font.family: "Syncopate"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment : Text.AlignVCenter
-                                }
-
-                            }
-                        }
+                model:campaignModel
 
 
 
-                    delegate:Row{
-                        width: parent.width
-                        height : lstview.rowHeight
-                        spacing: lstview.colSpacing
-                        Text{
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: model.name + " ( " +  content.campaignTypeName( model.type ) + " )"
-                            width: lstview.widthCol * 3
-                        }
+                delegate:Row{
+                    width: parent.width
+                    height : mainPage.rowHeight
+                    spacing: mainPage.colSpacing
+                    Text{
+                        text: model.name + " ( " +  mainPage.campaignTypeName( model.type ) + " )"
+                        width: mainPage.widthCol * 3
+                        height: parent.height
 
-                        Text{
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: model.nbTeam
-                            width: lstview.widthCol
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                        Text{
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: model.nbPlayers
-                            width: lstview.widthCol
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                        SPSButtonText{
-                            height : parent.height
-                            width: lstview.widthCol
-                            text: model.AmIConnected ? "Leave" : "Join";
-                            color:globals.ui.buttonBkColor
-                            onClicked: {
-                                if (model.AmIConnected)
-                                    campaignModel.leaveCampaign( model.idcampaign, accountModel.accountId );
-                                else campaignModel.joinCampaign( model.idcampaign, accountModel.accountId );
-                            }
-                        }
-
-                        SPSButtonText{
-                            height : parent.height
-                            width: lstview.widthCol
-                            visible:model.isMyCampaign
-                            color:globals.ui.buttonBkColor
-                            text: "edit";
-                            onClicked: {
+                        font.pixelSize: globals.ui.textXXL
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                    }
+                    SPSButtonText{
+                        anchors.verticalCenter: parent.verticalCenter
+                        height : parent.height * 0.6
+                        width: mainPage.widthCol
+                        opacity :(model.isMyCampaign || mainWnd.isDev) ? 1 : 0
+                        color:globals.ui.buttonBkColor
+                        text: "edit";
+                        onClicked: {
+                            if (!opacity)
+                            {
                                 //mainWnd.createCampaign
                                 mainPanel.state="CreateCampaign";
                                 loader.item.campaignId = model.idcampaign;
                             }
                         }
+                    }
 
-                        SPSButtonText{
-                            height : parent.height
-                            width: lstview.widthCol
-                            visible:model.isMyCampaign
-                            color:globals.ui.buttonBkColor
-                            text: "remove";
-                            onClicked: campaignModel.deleteCampaign(model.idcampaign)
-                        }
+                    Text{
+                        text: model.nbTeam
+                        width: mainPage.widthCol
+                        height: parent.height
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
 
-                        SPSButtonText{
-                            height : parent.height
-                            width: lstview.widthCol
-                            visible:model.AmIConnected
-                            color:globals.ui.buttonBkColor
-                            text: "Play !";
-                            onClicked:
-                            {
-                                gameManager.startGame( model.idcampaign );
-                                mainPanel.state="Play";
-                            }
-                        }
+                        font.pixelSize: globals.ui.textM
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
 
 
                     }
+                    Text{
+                        text: model.nbPlayers
+                        width: mainPage.widthCol
+                        height: parent.height
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+
+                        font.pixelSize: globals.ui.textM
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                    }
+                    SPSButtonText{
+                        anchors.verticalCenter: parent.verticalCenter
+                        height : parent.height * 0.6
+                        width: mainPage.widthCol
+                        text: model.AmIConnected ? "Leave" : "Play";
+                        color:model.AmIConnected ? globals.ui.buttonBkColor : "green"
+                        onClicked: {
+                            if (model.AmIConnected)
+                                campaignModel.leaveCampaign( model.idcampaign, accountModel.accountId );
+                            else{
+                                //campaignModel.joinCampaign( model.idcampaign, accountModel.accountId );
+                                mainPanel.state="Play";
+                                gameManager.startGame( model.idcampaign );
+                            }
+
+                        }
+
+                    }
+
+
+
 
                 }
+
             }
+        //}
 
         }
         SPSButtonText{
             width: parent.width * 0.4
-            height: Math.min(100,parent.height *0.1)
+            height: parent.rowHeight
             anchors.left: parent.left
             anchors.bottom : parent.bottom
             text:"Cancel"
@@ -309,7 +282,7 @@ Item{
 
         SPSButtonText{
             width: parent.width * 0.4
-            height:Math.min(100,parent.height *0.1)
+            height:parent.rowHeight
             anchors.right: parent.right
             anchors.bottom : parent.bottom
             text: "Refresh"

@@ -151,10 +151,11 @@ void PlayerModel::updateModel()
        //Case 1: new player not already existing in the model
        if ( !index.isValid() )
        {
-           int row = rowCount() - 1;
+           int row = rowCount();
            beginInsertRows(QModelIndex(), row, row);
            m_lstValues.push_back( player);
            endInsertRows();
+           emit newPlayer(player.NamePlayer);
 
        }
        //Case 2 : existing player, update if necessary
@@ -179,7 +180,7 @@ void PlayerModel::updateModel()
 void PlayerModel::purgePlayers(const std::vector<int>& lstPlayersIdToKeep)
 {
     int row = 0;
-    for (auto player : m_lstValues)
+    for (PlayerData player : m_lstValues)
     {
         bool bFound = false;
         for (int idplayer : lstPlayersIdToKeep)
@@ -188,7 +189,11 @@ void PlayerModel::purgePlayers(const std::vector<int>& lstPlayersIdToKeep)
                 bFound = true;
         }
         if (!bFound)
+        {
+            emit playerLeave( player.NamePlayer);
             removeRows( row, 1);
+
+        }
 
         row++;
 

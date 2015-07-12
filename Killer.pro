@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     accountmanager.cpp \
     campaignmanager.cpp \
     playermodel.cpp \
-    positionlogger.cpp
+    positionlogger.cpp \
+    messagemodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -25,11 +26,8 @@ HEADERS += \
     campaignmanager.h \
     playermodel.h \
     gamedata.h \
-    positionlogger.h
-
-
-    ANDROID_EXTRA_LIBS = \
-        $$PWD/../../../../Qt/5.4/android_armv7/plugins/sqldrivers/libmariadb.so
+    positionlogger.h \
+    messagemodel.h
 
 DISTFILES += \
     android/AndroidManifest.xml \
@@ -37,3 +35,8 @@ DISTFILES += \
     android/build.gradle
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+    ANDROID_EXTRA_LIBS = \
+        $$PWD/../../Qt/5.4/android_armv7/plugins/sqldrivers/libmariadb.so
+}

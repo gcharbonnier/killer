@@ -26,10 +26,13 @@ int main(int argc, char *argv[])
 
 
     GameManager theGame;
+    const QVariant vAppVersion = app.applicationVersion();
+    engine.rootContext()->setContextProperty("appVersion",&vAppVersion);
     engine.rootContext()->setContextProperty("gameManager", &theGame);
     engine.rootContext()->setContextProperty("playerModel", &theGame.playerModel()); //TODO : it should be possible to use the model as the property of the gps logger
     engine.rootContext()->setContextProperty("campaignModel", &theGame.campaignModel());
     engine.rootContext()->setContextProperty("accountModel", &theGame.accountModel());
+    engine.rootContext()->setContextProperty("messageModel", &theGame.messageModel());
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

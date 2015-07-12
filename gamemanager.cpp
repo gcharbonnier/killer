@@ -6,7 +6,7 @@
 
 
 GameManager::GameManager(QObject *parent) : QObject(parent), m_gameData(),
-            m_accountManager(m_gameData),m_campaignManager(m_gameData), m_positionLogger(m_gameData), m_playerModel(m_gameData)
+            m_accountManager(m_gameData),m_campaignManager(m_gameData), m_positionLogger(m_gameData), m_playerModel(m_gameData), m_messageModel(m_gameData)
 {
 
 
@@ -22,12 +22,17 @@ GameManager::~GameManager()
 
 bool GameManager::startGame(uint idCampaign)
 {
+    m_campaignManager.joinCampaign( idCampaign, m_accountManager.accountId());
     m_campaignManager.setCurrentCampaign( idCampaign);
     m_positionLogger.start();
+
+    //Notify the others players using the intercom
+    m_messageModel.sendSystemMessage( m_gameData.accountName() + " joined the campaign");
 
     m_gameTimer->start(1000);
 
     m_playerModel.resetModel();
+    m_messageModel.resetModel();
 
     emit campaignNameChanged();
     return true;
@@ -35,6 +40,10 @@ bool GameManager::startGame(uint idCampaign)
 
 bool GameManager::stopGame()
 {
+    //Notify the others players using the intercom
+    m_messageModel.sendSystemMessage( m_gameData.accountName() + " left the campaign");
+
+    m_campaignManager.leaveCampaign(m_gameData.campaignId(), m_accountManager.accountId());
     m_campaignManager.setCurrentCampaign( 0);
     m_positionLogger.stop();
 
@@ -48,6 +57,7 @@ void GameManager::play()
 {
     //update players model
     m_playerModel.updateModel();
+    m_messageModel.updateModel();
 
     //Read events
     QString str = QString("SELECT *  FROM `geo_events` WHERE `RECIPIENT` IN (%1,0) AND `PROCESSED` = 0")
@@ -75,18 +85,19 @@ void GameManager::processEvent(int type, int emitter, QString option )
 {
     //retrieve emitter data
     PlayerData emitterData = m_playerModel.getPlayerData( emitter);
-
-    switch (type)
+    if (emitterData.ID != 0)
     {
-    case 1: //SHOOT (by someone)
-        shoot( emitter, false);
-        emit killedBy( emitterData.NamePlayer );
-        break;
-    case 2: //(someone has been) KILLED (by us)
-        emit killed( emitterData.NamePlayer );
-        break;
+        switch (type)
+        {
+        case 1: //SHOOT (by someone)
+            shoot( emitter, false);
+            emit killedBy( emitterData.NamePlayer );
+            break;
+        case 2: //(someone has been) KILLED (by us)
+            emit killed( emitterData.NamePlayer );
+            break;
+        }
     }
-
 
 }
 
@@ -104,7 +115,7 @@ void GameManager::aknowledgeEvent(const std::vector<int>& lstEventId)
     }
 
     //Read events
-    QString str = QString("UPDATE  `simplisim_dejavu`.`geo_events` SET  `PROCESSED` =  '1' WHERE  `geo_events`.`ID` IN(%1);")
+    QString str = QString("UPDATE  `simplisim_dejavu`.`geo_events` SET  `PROCESSED` =  '1',`ProcessedTime` = NOW( ) WHERE  `geo_events`.`ID` IN(%1);")
             .arg( sLstEventId);
     QSqlQuery query(str);
 

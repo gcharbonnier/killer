@@ -7,17 +7,28 @@ import QtPositioning 5.4
 Item {
     id:myMap
     //anchors.fill: parent
-    property var center: QtPositioning.coordinate(47.0964, -1.6368)
     property alias model: mapItemView.model
     property alias zoomLevel: map.zoomLevel
     //property var delegate: defaultDelegate
 
+    PositionSource {
+        id:posSource
+        onPositionChanged: {
+            // center the map on the current position
+            map.center = position.coordinate
+        }
+        Component.onCompleted: {
+            //if (!valid)
+                map.center = QtPositioning.coordinate(47.096207, -1.636881)
+        }
+    }
+
     Map {
        id: map
-       anchors.fill: parent
-       anchors.margins: 20
+       anchors.fill: mapFrame
+       anchors.margins: mapFrame.border.width//Math.min(20, myMap.height*0.1)
        plugin:  Plugin { name: "osm"}
-       center: myMap.center
+       center: posSource.position.coordinate//QtPositioning.coordinate(47.096207, -1.636881)
        zoomLevel: map.maximumZoomLevel
 
        MapItemView{
@@ -35,7 +46,7 @@ Item {
                   radius:16
                   opacity: 0.6
                   color:
-                      (IdPlayer == globals.currentTarget.id) ? "yellow" :(Type === 1 ? "red" : "green")
+                      (IdPlayer === globals.currentTarget.id) ? "yellow" :(Type === 1 ? "red" : "green")
 
                   Text{
                       text: NamePlayer
@@ -75,10 +86,10 @@ Item {
     Rectangle{
         id:mapFrame
         anchors.fill : parent
-        anchors.margins : 10
-        radius : 30
+        anchors.margins : 5
+        radius : 2 * border.width
         border.color: "darkgrey"
-        border.width: 10
+        border.width: Math.min( 10, parent.height * 0.01)
         color: "transparent"
         clip: true
         z:10
@@ -151,8 +162,8 @@ Item {
             height : width
             width : mapFrame.width * 0.3
             //opacity:0.7
-            x: mapFrame.x + mapFrame.width - 2*mapFrame.border.width - foldedAreaWidth
-            y: mapFrame.y + mapFrame.height - 2*mapFrame.border.width - foldedAreaHeight
+            x: mapFrame.x + mapFrame.width - mapFrame.radius - foldedAreaWidth
+            y: mapFrame.y + mapFrame.height - mapFrame.radius - foldedAreaHeight
             z:-1
             //color:"transparent"
             state : "closed"
@@ -161,8 +172,8 @@ Item {
 
             Column{
                 anchors.fill: parent
-                anchors.margins: 10
-                anchors.topMargin: parent.foldedAreaHeight + 10
+                anchors.margins: 5
+                anchors.topMargin: parent.foldedAreaHeight + 5
                 property int rowHeight : (height - anchors.margins - anchors.topMargin) / 3
                 Text{
                     text: globals.currentTarget.name

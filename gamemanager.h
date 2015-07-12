@@ -3,6 +3,7 @@
 
 #include "gamedata.h"
 #include "playermodel.h"
+#include "messagemodel.h"
 #include "campaignmanager.h"
 #include "accountmanager.h"
 #include "positionlogger.h"
@@ -26,6 +27,7 @@ public:
     PlayerModel& playerModel(){ return m_playerModel;}
     CampaignManager& campaignModel(){ return m_campaignManager;}
     AccountManager& accountModel() { return m_accountManager;}
+    MessageModel& messageModel() { return m_messageModel;}
 
     qreal direction(){
         return m_gameData.lastDirection();
@@ -74,6 +76,7 @@ private:
     AccountManager m_accountManager;
     PlayerModel m_playerModel;
     PositionLogger m_positionLogger;
+    MessageModel m_messageModel;
 
 
 

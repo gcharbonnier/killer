@@ -13,10 +13,9 @@ Item {
     property bool useImage : true
 
     Component.onCompleted: {
-        currentItem = lstView.itemAt(currentSelection).currentData;
+        if ( lstView.itemAt(currentSelection) )
+            currentItem = lstView.itemAt(currentSelection).currentData;
     }
-
-    // - bail congés pour vente
 
     ListModel{
         id:dummyModel

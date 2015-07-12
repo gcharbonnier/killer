@@ -5,8 +5,8 @@ import "res/qml/component"
 
 
 Window {
-    property bool isDev : accountModel.accountName == "charby-dev"
     id:mainWnd
+    property bool isDev : accountModel.accountName == "charby-dev"
     height:isDev ? 1080 : Screen.desktopAvailableHeight
     width:isDev ? 1920 : Screen.desktopAvailableWidth
     visible: true
@@ -16,11 +16,50 @@ Window {
 
 
 
+
     Image {
         //opacity:0.8
         anchors.fill: parent
         source: "qrc:/res/background.png"
+
+        focus: true
+        Keys.onPressed: {
+
+            if (mainWnd.isDev)
+            {
+                mainWnd.visibility = 2
+                switch (event.key)
+                {
+                case Qt.Key_0:
+                    mainWnd.height=1080
+                    mainWnd.width=1920
+                    break;
+                case Qt.Key_1:
+                    mainWnd.height=320
+                    mainWnd.width=480
+                    break;
+
+                }
+            }
+        }
     }
+
+    Text{
+        text: appVersion
+        anchors.left: parent.left
+        anchors.top: parent.top
+        visible:false
+        width: 100
+        height:50
+        font.pixelSize: globals.ui.textM
+        minimumPixelSize: globals.ui.minimumPixelSize
+        fontSizeMode : Text.Fit
+        font.family: "Syncopate"
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment : Text.AlignVCenter
+    }
+
+
     Image {
         id:character
         x:0
@@ -40,11 +79,16 @@ Window {
         anchors.fill: parent
         source: "res/qml/component/MainMenu.qml"
 
+
+
+
     }
 
     Globals{
         id:globals
     }
+
+
 
 
     Item{
@@ -80,4 +124,6 @@ Window {
                     PropertyAnimation { properties: "x, scale, y"; duration:1000;easing.type: Easing.InOutQuad }
             }
     }
+
+
 }

@@ -2,8 +2,8 @@ import QtQuick 2.0
 import QtSensors 5.4
 
 Item{
-    height: parent.height
-    width: parent.width*0.5
+    //height: parent.height
+    //width: parent.width*0.5
 
 
     Flipable{
@@ -11,7 +11,7 @@ Item{
         anchors.fill: parent
 
 
-
+        /*
         back:Radar_SPS{
             id:radar
             anchors.fill: flipable
@@ -21,7 +21,7 @@ Item{
             model: playerModel
             showZoomControl : true
 
-        }
+        }*/
 
         front:Map_SPS{
             id:myMap
@@ -48,6 +48,7 @@ Item{
         }
 
 
+        /*
         MouseArea{
             anchors.fill: flipable
             propagateComposedEvents: true
@@ -69,5 +70,6 @@ Item{
                 else flipable.state = "";
             }
         }
+        */
     }
 }
