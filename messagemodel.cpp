@@ -150,6 +150,7 @@ QHash<int, QByteArray> MessageModel::roleNames() const
 
 Qt::ItemFlags MessageModel::flags(const QModelIndex &index) const
 {
+    Q_UNUSED( index);
     return Qt::ItemIsEditable;
 
 }
@@ -172,5 +173,7 @@ bool MessageModel::sendSystemMessage(QString message)
 
 bool MessageModel::sendMessage(QString message, QString recipient)
 {
-    return addMessage(m_gameData.accountName(),recipient,1,message, m_gameData.campaignId());
+    bool isOK = addMessage(m_gameData.accountName(),recipient,1,message, m_gameData.campaignId());
+    updateModel();
+    return isOK;
 }

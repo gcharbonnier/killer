@@ -14,8 +14,9 @@ Item{
         Text{
             anchors.fill: parent
             anchors.margins : 20
-            text:"Killer is an Alternate Reality Game. The principle is to interact with other players using the geolocalisation service of your mobile.<br>" +
-                 "More information can be found on ..."
+            text:qsTr("Killer is an Alternate Reality Game. \
+                       The principle is to interact with other players using the geolocalisation service of your mobile.<br>\
+                       More information can be found on ...")
             color: globals.ui.textcolor
             font.pixelSize: globals.ui.textGodzilla
             minimumPixelSize: globals.ui.minimumPixelSize

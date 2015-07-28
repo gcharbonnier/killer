@@ -11,6 +11,7 @@ Rectangle {
     //property alias backgroundColor : color
     property alias foregroundColor : progress.color
 
+    property real percValue : Math.floor(( value - minValue) / ( maxValue - minValue) * 100)
 
     Rectangle{
         id:progress
@@ -18,7 +19,7 @@ Rectangle {
         x: margins
         y: margins
         height : parent.height - 2* margins
-        width : (parent.width - 2 * margins) * parent.value / parent.maxValue
+        width : Math.min( (parent.width - 2 * margins), ((parent.width - 2 * margins) * parent.percValue / 100))
         color: globals.ui.buttonBkColor
 
 
@@ -32,8 +33,7 @@ Rectangle {
 
     Text
     {
-        property real percValue : (parent.value - parent.minValue) / (parent.maxValue - parent.minValue) * 100
-        text: parent.showAsPerc ? parent.prefixText + percValue + " %" : parent.prefixText + parent.value
+        text: parent.showAsPerc ? parent.prefixText + parent.percValue + " %" : parent.prefixText + parent.value
         id: embText
         anchors.fill: parent
         anchors.margins: globals.ui.buttonMargin

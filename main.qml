@@ -45,7 +45,7 @@ Window {
     }
 
     Text{
-        text: appVersion
+        text: "Version : " + appVersion
         anchors.left: parent.left
         anchors.top: parent.top
         visible:false
@@ -83,11 +83,13 @@ Window {
 
 
     }
-
     Globals{
         id:globals
     }
 
+    PleaseWait{
+        id:pleaseWait
+    }
 
 
 

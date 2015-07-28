@@ -45,7 +45,7 @@ class MessageModel : public QAbstractListModel
 public:
     MessageModel(GameData& gameData);
     MessageModel& operator=( const MessageModel& mm){
-
+        Q_UNUSED(mm);
         //FIXME
         return *this;
     }

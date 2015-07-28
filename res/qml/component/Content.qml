@@ -4,12 +4,11 @@ import QtQuick.Controls 1.2
 Item {
 
 
-
     property var stack:stack
     StackView{
         id:stack
         //initialItem:targetSelect
-
+        anchors.fill: parent
         delegate: StackViewDelegate{
             function transitionFinished(properties)
             {

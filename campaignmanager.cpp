@@ -32,7 +32,7 @@ QVariant CampaignItem::getRole(int role) const
 }
 
 
-CampaignManager::CampaignManager(GameData& gameData, QObject *parent) : m_gameData( gameData) , QAbstractListModel(parent)
+CampaignManager::CampaignManager(GameData& gameData, QObject *parent) : QAbstractListModel(parent), m_gameData( gameData)
 {
 
 

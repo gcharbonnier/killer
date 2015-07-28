@@ -23,7 +23,8 @@ Item {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        content.stack.push({item:Qt.resolvedUrl("qrc:/res/qml/component/Player.qml"), replace:true});
+                        //content.stack.push({item:Qt.resolvedUrl("qrc:/res/qml/component/Player.qml"), replace:true});
+                        content.stack.push({item:Qt.resolvedUrl("qrc:/res/qml/component/HallOfFame.qml"), replace:true});
                     }
                 }
             }
@@ -52,9 +53,11 @@ Item {
                 height: parent.height * 0.45
                 sourceSymbol: "qrc:/res/appbar.cards.heart.png"
                 value: globals.perso.health
+                minValue : 0
+                maxValue: globals.perso.maxHealth
             }
             Row{
-                width: parent.width * 0.45
+                width: parent.width
                 height: parent.height * 0.45
                 spacing : 5
                 SPSProgressBar{
@@ -63,13 +66,26 @@ Item {
                     showAsPerc : false
                     minValue : globals.perso.xpMinLevelCurrent
                     maxValue: globals.perso.xpMaxLevelCurrent
-                    prefixText : "XP: "
+                    prefixText : qsTr("Level %1 - XP: ").arg( globals.perso.level)
                     value: globals.perso.xp
                 }
+
                 SPSButtonText{
+                    id:creditsText
                     text: "$ : " + globals.perso.credits
                     width: Math.min( 200 ,parent.width)
                     color: globals.ui.buttonBkColor
+                    height: parent.height
+                }
+
+                SPSProgressBar{
+                    prefixText: qsTr("Energy : ")
+                    value: globals.perso.energy
+                    showAsPerc : false
+                    minValue: 0
+                    maxValue: globals.perso.maxEnergy
+                    width: parent.width * 0.5 - creditsText.width
+                    //color: globals.ui.buttonBkColor
                     height: parent.height
                 }
 
@@ -99,40 +115,44 @@ Item {
             ListElement {
                 imageSource: "qrc:/res/crosshairs-146113_640.png"
                 componentUrl: "qrc:/res/qml/component/Map.qml"
-                label: "Map"
+                label: qsTr("Map")
             }
+            /*
             ListElement {
                 imageSource: "qrc:/res/fingerprint48.png"
                 componentUrl: "qrc:/res/qml/component/Character.qml"
-                label: "Character"
+                label: qsTr("Character")
             }
+            */
             ListElement {
                 imageSource: "qrc:/res/reading-310397_640.png"
                 componentUrl: "/res/qml/component/Help.qml"
-                label: "Help"
+                label: qsTr("Help")
             }
             ListElement {
                 imageSource: "qrc:/res/star139.png"
                 componentUrl: "/res/qml/component/Rewards.qml"
-                label: "Rewards"
+                label: qsTr("Rewards")
             }
 
             ListElement {
                 imageSource: "qrc:/res/walkie5.png"
                 componentUrl: "/res/qml/component/Intercom.qml"
-                label: "Intercom"
+                label: qsTr("Intercom")
             }
 
+            /*
             ListElement {
                 imageSource: "qrc:/res/man374.png"
                 componentUrl: "/res/qml/component/Skills.qml"
-                label: "Skills"
+                label: qsTr("Skills")
             }
+            */
 
             ListElement {
                 imageSource: "qrc:/res/shield77.png"
                 componentUrl: "/res/qml/component/Equipment.qml"
-                label: "Equipment"
+                label: qsTr("Equipment")
             }
         }
         stack: content.stack

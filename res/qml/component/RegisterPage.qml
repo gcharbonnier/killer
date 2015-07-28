@@ -60,7 +60,7 @@ Item{
                 spacing: 5
                 Text{
                     id:createAccountError
-                    text: register ? "Register error" : "Login error, check password"
+                    text: register ? qsTr("Register error") : qsTr("Login error, check password")
                     color:"red"
                     width: parent.width
                     height: parent.rowHeight
@@ -79,7 +79,7 @@ Item{
                     width: parent.width
                     height:parent.rowHeight
                     Text{
-                        text:"Login"
+                        text:qsTr("Login")
                         font.pixelSize: globals.ui.textXL
                         minimumPixelSize: globals.ui.minimumPixelSize
                         fontSizeMode : Text.Fit
@@ -89,7 +89,7 @@ Item{
                     }
                     Text{
                         id:accountExist
-                        text:register ? "This alias already exists, choose another one !" : "This account does not exist !"
+                        text:register ? qsTr("This alias already exists, choose another one !") : qsTr("This account does not exist !")
                         anchors.verticalCenter: parent.verticalCenter
                         color:"red"
                         font.pixelSize: globals.ui.textS
@@ -149,7 +149,7 @@ Item{
 
                     }
                     Text{
-                        text: password.echoMode == TextInput.Normal ? "hide":"show"
+                        text: password.echoMode == TextInput.Normal ? qsTr("hide"):qsTr("show")
                         anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: globals.ui.textM
                         minimumPixelSize: globals.ui.minimumPixelSize
@@ -209,7 +209,7 @@ Item{
             height: parent.rowHeight
             anchors.left: parent.left
             anchors.bottom : parent.bottom
-            text:"Cancel"
+            text:qsTr("Cancel")
             onClicked:mainPanel.state=""
         }
 
@@ -221,7 +221,7 @@ Item{
             anchors.bottom : parent.bottom
             enabled: register ? !accountExists : accountExists
             color:enabled ? globals.ui.buttonBkColor : "grey"
-            text: register ? "Register":"Login"
+            text: register ? qsTr("Register"):qsTr("Login")
             onClicked: {
                 if (register)
                 {

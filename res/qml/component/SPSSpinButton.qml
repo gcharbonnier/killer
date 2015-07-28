@@ -3,19 +3,17 @@ import QtQuick 2.4
 Item {
     id:root
     property alias model:lstView.model
-    property alias currentSelection:lstView.currentSelection
-
-    property variant currentItem: null
-    signal optionChanged()
+    property alias currentSelection:lstView.currentIndex
+    property alias currentItem: lstView.currentItem
 
     property string labelPrefix : ""
     property string roleToDisplayName : "label"
     property bool useImage : true
 
-    Component.onCompleted: {
+    /*Component.onCompleted: {
         if ( lstView.itemAt(currentSelection) )
             currentItem = lstView.itemAt(currentSelection).currentData;
-    }
+    }*/
 
     ListModel{
         id:dummyModel
@@ -46,7 +44,7 @@ Item {
             width: content.widthArrow
             //x:parent.x
 
-            enabled: lstView.currentSelection > 0
+            enabled: lstView.currentIndex > 0
             color:root.useImage ? "transparent" : enabled ? globals.ui.textInputBackground : globals.ui.buttonBkColorDisabled
 
             Text{
@@ -68,47 +66,33 @@ Item {
             }
             MouseArea{
                 anchors.fill: parent
-                onClicked: { lstView.previous();}
+                onClicked: { lstView.decrementCurrentIndex();}
             }
         }
 
-        Repeater{
-            id:lstView
-            model:dummyModel
-            property int currentSelection: 0
 
-            function next(){
 
-                if (currentSelection < count)
-                {
-                    currentSelection++;
-                    root.currentItem = itemAt(currentSelection).currentData;
-                    root.optionChanged();
-                }
-            }
-            function previous(){
-                if (currentSelection > 0)
-                {
-                    currentSelection--;
-                    root.currentItem = itemAt(currentSelection).currentData;
-                    root.optionChanged();
-                }
-
-            }
-            delegate:
-                Rectangle{
-                    property variant currentData: model
+        ListView{
+        id:lstView
+        height:content.height
+        width: content.widthArrow * 3
+        model:dummyModel
+        snapMode: ListView.SnapOneItem
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        orientation: ListView.Horizontal
+        delegate: Rectangle{
+                    property variant currentData:model
                     height:content.height
                     width: content.widthArrow * 3
                     radius:10
                     color: "transparent"//globals.ui.textInputBackground
                     opacity: globals.ui.buttonBkOpacity
-                    visible:index === lstView.currentSelection;
+                    visible:index === lstView.currentIndex;
                     Text{
                         anchors.fill: parent
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment : Text.AlignVCenter
-                        text: labelPrefix + currentData[root.roleToDisplayName]
+                        text: root.labelPrefix + model[root.roleToDisplayName]//"("+index + "/" + lstView.count + ")\n" + root.labelPrefix + model[root.roleToDisplayName]//label
                         font.pixelSize: globals.ui.textXL
                         color: globals.ui.textEditColor
                         minimumPixelSize: globals.ui.minimumPixelSize
@@ -117,8 +101,6 @@ Item {
                 }
         }
 
-
-
         Rectangle{
             id:rightArrow
             radius : height * globals.ui.buttonRadiusPercHeight
@@ -126,7 +108,7 @@ Item {
             height:content.height
             width: content.widthArrow
             //x:lstView.x + lstView.width + parent.spacing
-            enabled: lstView.currentSelection < (lstView.count -1)
+            enabled: lstView.currentIndex < (lstView.count -1)
             color:root.useImage ? "transparent" : enabled ? globals.ui.textInputBackground : globals.ui.buttonBkColorDisabled
             Text{
                 text:">>"
@@ -148,13 +130,14 @@ Item {
 
             MouseArea{
                 anchors.fill: parent
-                onClicked: { lstView.next();}
+                onClicked: { lstView.incrementCurrentIndex()}
             }
         }
 
-
     }
 }
+
+
 
 
 

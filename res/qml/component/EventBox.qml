@@ -1,9 +1,11 @@
 import QtQuick 2.0
+import "../../../GameLogic.js" as EquipmentAction
 
 Rectangle{
     id:notifRoot
     color:"grey"
     opacity:0
+    radius : 0.05 * height
     //property alias text: notificationMessage.text
     property int typeblocking : 0
     /* Type description */
@@ -28,6 +30,7 @@ Rectangle{
             typeblocking = type;
             notificationMessage.text = message;
             proceedWithType( type);
+
             showMessageAnim.restart();
         }
     }
@@ -46,13 +49,14 @@ Rectangle{
         switch (type)
         {
             case 10: // action success
-                globals.perso.xp += 1;
+                EquipmentAction.modifyXP(2);
                 globals.sounds.succeeded.play();
                 color="lightgreen";
                 embImage.source = "qrc:/res/actionSuccess.png"
                 embImage.visible = true;
                 break;
             case 11: // action failed
+                EquipmentAction.modifyXP(1);
                 globals.sounds.missed.play();
                 color="yellow";
                 embImage.source = "qrc:/res/fail.png"
@@ -60,7 +64,7 @@ Rectangle{
                 break;
             case 21: // shooted : someone is shooting you
                 color="orange";
-                globals.perso.health -= 34;
+                EquipmentAction.modifyHealth( -34 );
                 //embImage.source = "qrc:/res/actionSuccess.png"
                 embImage.visible = false;
                 globals.sounds.injured.play();
@@ -73,7 +77,7 @@ Rectangle{
                 ackButton.text="Quit"
                 gameManager.stopGame( );
                 //Notify the others players using the intercom
-                messageModel.sendSystemMessage( accountModel.accountName + " left the campaign");
+                messageModel.sendSystemMessage( qsTr("%1 left the campaign").arg(accountModel.accountName));
                 break;
             default:
                 embImage.visible = false;
@@ -135,14 +139,14 @@ Rectangle{
     SequentialAnimation {
         id: showMessageAnim
         running: false
-        NumberAnimation { target: notificationBox; property: "opacity"; to: 1.0; duration: 100}
-        NumberAnimation { target: notificationBox; property: "opacity"; to: 0.0; duration: 5000}
+        NumberAnimation { target: notifRoot; property: "opacity"; to: 1.0; duration: 100}
+        NumberAnimation { target: notifRoot; property: "opacity"; to: 0.0; duration: 5000}
 
     }
     SequentialAnimation {
         id: displayMessageAnim
         running: false
-        NumberAnimation { target: notificationBox; property: "opacity"; to: 1.0; duration: 100}
+        NumberAnimation { target: notifRoot; property: "opacity"; to: 1.0; duration: 100}
     }
 
 

@@ -1,16 +1,23 @@
 import QtQuick 2.3
 
+
 Item{
+
     height: parent.height
-    width: parent.width*0.5
+    width: parent.width
+    visible:true
+    z:1000
 
     Grid{
         columns: 10
         rows: 5
-        anchors.fill : parent
+        height: parent.height
+        width: parent.width
         anchors.margins: 30
         spacing: 10
         property int rowHeight : ( height - (spacing * rows - 1) - 2 * anchors.margins ) / rows
+
+
         Repeater{
             model : 50
 
@@ -26,5 +33,6 @@ Item{
 
         }
     }
+
 }
 

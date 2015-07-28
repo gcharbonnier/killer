@@ -11,6 +11,7 @@ Item{
         spacing:5
         property int rowHeight: (height - 2 * spacing ) / 7
 
+        /*
         Row{
             width: parent.width
             height : parent.rowHeight
@@ -18,7 +19,7 @@ Item{
             Text{
                 width: parent.width * 0.6
                 height: parent.height
-                text:"Communication channel :"
+                text:qsTr("Communication channel :")
                 color: globals.ui.textcolor
                 font.pixelSize: globals.ui.textGodzilla
                 minimumPixelSize: globals.ui.minimumPixelSize
@@ -33,22 +34,22 @@ Item{
                 model:ListModel{
                     //A dummy model to test the component
                     ListElement{
-                        label:"All"
+                        label:qsTr("All")
                     }
                     ListElement{
-                        label:"Your team only"
+                        label:qsTr("Your team only")
                     }
                     ListElement{
-                        label:"Friends"
+                        label:qsTr("Friends")
                     }
                     ListElement{
-                        label:"Foes"
+                        label:qsTr("Foes")
                     }
                 }
                 width: parent.width * 0.4
                 height:parent.height
             }
-        }
+        }*/
 
         Rectangle{
             width: parent.width
@@ -118,7 +119,7 @@ Item{
             Text{
                 width: parent.width * 0.2
                 height: parent.height
-                text:"You :"
+                text:qsTr("You :")
                 color: globals.ui.textcolor
                 font.pixelSize: globals.ui.textGodzilla
                 minimumPixelSize: globals.ui.minimumPixelSize
@@ -138,8 +139,14 @@ Item{
             SPSButtonText{
                 width: parent.width * 0.2
                 height: parent.height
-                text:"Send"
-                onClicked: messageModel.sendMessage( msgToSend.text, globals.currentTarget.name);
+                text:qsTr("Send")
+                onClicked: {
+                    if (msgToSend.text !=""){
+                        messageModel.sendMessage( msgToSend.text, globals.currentTarget.name);
+                        msgToSend.text = "";
+                        lstview.positionViewAtEnd();
+                    }
+                }
 
             }
         }

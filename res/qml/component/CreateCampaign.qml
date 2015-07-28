@@ -78,7 +78,7 @@ Item{
                     spacing:5
                     width: parent.width
                     height:2 * parent.rowHeight
-                    property string name: "campaign name"
+                    property string name: qsTr("campaign name")
                     Text{
                         text:"Campaign name :"
                         anchors.verticalCenter: parent.verticalCenter
@@ -109,7 +109,7 @@ Item{
                     property alias currentSelection: spinCampaignType.currentSelection
 
                     Text{
-                        text:"Campaign type :"
+                        text:qsTr("Campaign type :")
                         anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: globals.ui.textXL
                         color: globals.ui.textcolor
@@ -136,7 +136,7 @@ Item{
                     width: parent.width
                     height:parent.rowHeight
                     Text{
-                        text:"Area center :"
+                        text:qsTr("Area center :")
                         anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: globals.ui.textXL
                         color: globals.ui.textcolor
@@ -168,7 +168,7 @@ Item{
                     width: parent.width
                     height:parent.rowHeight
                     Text{
-                        text:"Area radius :"
+                        text:qsTr("Area radius :")
                         anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: globals.ui.textXL
                         color: globals.ui.textcolor
@@ -196,7 +196,7 @@ Item{
                     width: parent.width
                     height:parent.rowHeight
                     Text{
-                        text:"Number of team :"
+                        text:qsTr("Number of team :")
                         anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: globals.ui.textXL
                         color: globals.ui.textcolor
@@ -226,7 +226,7 @@ Item{
             height: container.rowHeight
             anchors.left: parent.left
             anchors.bottom : parent.bottom
-            text:"Cancel"
+            text:qsTr("Cancel")
             onClicked:mainPanel.state=""
         }
 
@@ -237,7 +237,7 @@ Item{
             anchors.bottom : parent.bottom
             anchors.rightMargin: parent.width *0.05
             color:enabled ? globals.ui.buttonBkColor : "grey"
-            text: campaignId === 0 ? "Create" : "Modify"
+            text: campaignId === 0 ? qsTr("Create") : qsTr("Modify")
             onClicked: {
                 if ( gameManager.createCampaign( campaignType.currentSelection, campaignName.name, numTeam.nbTeam, campaignId ))
                 {
@@ -256,7 +256,7 @@ Item{
             anchors.right: parent.right
             anchors.bottom : parent.bottom
             color:"red"
-            text: "Remove"
+            text: qsTr("Remove")
             visible: campaignId != 0
             onClicked: {
                 campaignModel.deleteCampaign(campaignId);

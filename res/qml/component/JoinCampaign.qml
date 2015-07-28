@@ -78,7 +78,7 @@ Item{
                     width: mainPage.widthCol * 3
                     Text
                     {
-                        text:"Name (type)"
+                        text:qsTr("Name (type)")
                         anchors.fill: parent
                         anchors.margins: globals.ui.buttonMargin
                         color: globals.ui.textcolor
@@ -96,7 +96,7 @@ Item{
                     height : parent.height
                     width: mainPage.widthCol
                     Text{
-                        text:"Edit"
+                        text:qsTr("Edit")
                         anchors.fill: parent
                         anchors.margins: globals.ui.buttonMargin
                         color: globals.ui.textcolor
@@ -108,13 +108,14 @@ Item{
                         verticalAlignment : Text.AlignVCenter
                     }
 
+
                 }
                 Rectangle{
                     color:"transparent"
                     height : parent.height
                     width: mainPage.widthCol
                     Text{
-                        text:"Teams"
+                        text:qsTr("Teams")
                         anchors.fill: parent
                         anchors.margins: globals.ui.buttonMargin
                         color: globals.ui.textcolor
@@ -132,7 +133,7 @@ Item{
                     height : parent.height
                     width: mainPage.widthCol
                     Text{
-                        text:"Players"
+                        text:qsTr("Players")
                         anchors.fill: parent
                         anchors.margins: globals.ui.buttonMargin
                         color: globals.ui.textcolor
@@ -208,9 +209,9 @@ Item{
                         width: mainPage.widthCol
                         opacity :(model.isMyCampaign || mainWnd.isDev) ? 1 : 0
                         color:globals.ui.buttonBkColor
-                        text: "edit";
+                        text: qsTr("edit");
                         onClicked: {
-                            if (!opacity)
+                            if (opacity)
                             {
                                 //mainWnd.createCampaign
                                 mainPanel.state="CreateCampaign";
@@ -247,15 +248,18 @@ Item{
                         anchors.verticalCenter: parent.verticalCenter
                         height : parent.height * 0.6
                         width: mainPage.widthCol
-                        text: model.AmIConnected ? "Leave" : "Play";
+                        text: model.AmIConnected ? qsTr("Leave") : qsTr("Play");
                         color:model.AmIConnected ? globals.ui.buttonBkColor : "green"
                         onClicked: {
                             if (model.AmIConnected)
                                 campaignModel.leaveCampaign( model.idcampaign, accountModel.accountId );
                             else{
                                 //campaignModel.joinCampaign( model.idcampaign, accountModel.accountId );
+                                pleaseWait.show();
                                 mainPanel.state="Play";
                                 gameManager.startGame( model.idcampaign );
+
+
                             }
 
                         }

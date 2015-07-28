@@ -98,7 +98,7 @@ Item{
                         model:resolutionModel
                         width: parent.width * 0.4
                         height:content.rowHeight
-                        onOptionChanged: {
+                        onCurrentSelectionChanged:  {
                             mainWnd.visibility = 2
                             mainWnd.width = currentItem.width
                             mainWnd.height = currentItem.height

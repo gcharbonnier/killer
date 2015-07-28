@@ -76,6 +76,7 @@ public:
     ~CampaignManager();
 
     CampaignManager& operator=( const CampaignManager& pm){
+        Q_UNUSED(pm);
         return *this; //TODO remove this awful hack!
     }
 

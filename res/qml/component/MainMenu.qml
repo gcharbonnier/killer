@@ -35,13 +35,13 @@ Item{
         x:(parent.width - menuEntryWidth) / 2
         y: (1.14 * menuEntryHeight) * 2
         opacity:0
-        text: "Create campaign"
+        text: qsTr("Create campaign")
         onClicked: mainPanel.state="CreateCampaign"
     }
 
     SPSButtonText{
         id:menuJoinCampaign
-        text:"join campaign"
+        text:qsTr("join campaign")
         visible: accountModel.isLogged
         x:menuCreateCampaign.x
         y: (1.14 * menuEntryHeight) * 3
@@ -53,7 +53,7 @@ Item{
 
     SPSButtonText{
         id:menuRegister
-        text:"Register"
+        text:qsTr("Register")
         width : menuEntryWidth
         height: menuEntryHeight
         visible: !accountModel.isLogged
@@ -66,13 +66,53 @@ Item{
         }
 
     }
+
+    /*
+    ShaderEffectSource {
+        id: theSource
+        sourceItem: menuLogin
+        hideSource: true
+
+        ShaderEffect {
+            width: menuEntryWidth
+            height: menuEntryHeight
+            x:menuLogin.x
+            y:menuLogin.y
+            opacity:menuLogin.opacity
+            property variant source: theSource
+            property real amplitude: 0.004
+            property real frequency: 10
+            property real time: 0
+            NumberAnimation on time { loops: Animation.Infinite; from: 0; to: Math.PI * 2; duration: 600 }
+            //! [fragment]
+            fragmentShader:
+                "uniform lowp float qt_Opacity;" +
+                "uniform highp float amplitude;" +
+                "uniform highp float frequency;" +
+                "uniform highp float time;" +
+                "uniform sampler2D source;" +
+                "varying highp vec2 qt_TexCoord0;" +
+                "void main() {" +
+                "    highp vec2 p = sin(time + frequency * qt_TexCoord0);" +
+                "    gl_FragColor = texture2D(source, qt_TexCoord0 + amplitude * vec2(p.y, -p.x)) * qt_Opacity;" +
+                "}"
+            //! [fragment]
+
+
+        }
+
+    }*/
+
+
+
     SPSButtonText{
         id:menuLogin
-        text: accountModel.isLogged ? "Logout" : "Login"
+        text: accountModel.isLogged ? qsTr("Logout") : qsTr("Login")
         width : menuEntryWidth
         height: menuEntryHeight
         x:menuCreateCampaign.x
         y:(1.14 * menuEntryHeight) * 5
+        //visible:false
         opacity:0
         onClicked: {
             if (accountModel.isLogged)

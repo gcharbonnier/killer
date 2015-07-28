@@ -7,98 +7,201 @@ Rectangle{
     height: 2 * parent.rowHeight
     radius: Math.min( 20, height * globals.ui.buttonRadiusPercHeight)
     color:globals.ui.buttonBkColor
-    enabled: ( percChanceToSucceed > 0) && (globals.stuff.gunAmmonition >0)
 
-    property int percChanceToSucceed : globals.currentTarget.distance <= globals.currentWeapon.minDistance ? 100 :
-                                       globals.currentTarget.distance > globals.currentWeapon.maxDistance ? 0 :
-                                       100 - ((globals.currentTarget.distance - globals.currentWeapon.minDistance) / ( globals.currentWeapon.maxDistance - globals.currentWeapon.minDistance) * 100)
+    //Component.onCompleted: globals.weaponModel.recreateModel();
 
-    Item{
-        anchors.fill: parent
-        anchors.margins: Math.min( 10, parent.height * 0.1)
+    Rectangle{
+        color:"white"
+        radius: parent.radius
+        anchors.fill:parent
+        //anchors.margins: parent.height *0.1
+        z:1
+        visible : timer.running
+        opacity:0.8
 
-        Image{
-            id:imgWeapon
-            anchors.left : parent.left
-            width: parent.width * 0.5
-            height: parent.height * 0.5
-            source:"qrc:/res/gun.png"
-            visible:false
-        }
 
-        ColorOverlay {
-            anchors.fill: imgWeapon
-            anchors.margins: Math.min( 15, parent.height * 0.1)
-            source: imgWeapon
-            color: weapon.enabled ? "black" : "grey"
-        }
+        Text{
+            id:remainingTime
+            property int reloadtime : 0
 
-        Item{
-            id:ammoCartridge
-            anchors.left: imgWeapon.right
-            height: imgWeapon.height
-            width: parent.width * 0.4
-            Grid{
-                //rowSpacing : Math.min( 30, height * 0.01)
-                //columnSpacing: Math.min( 20, height * 0.01)
-                spacing : 1//Math.min( 5, height * 0.01)
-                rows : 2
-                columns : 5
-                anchors.fill: parent
-                anchors.margins: 1//Math.min( 15, height * 0.1)
-                Repeater{
-                    model:globals.stuff.gunAmmonition == 0 ? 0 : (globals.stuff.gunAmmonition % 10)+1
-                    Image{
-                        width: ammoCartridge.width / 6
-                        height: ammoCartridge.height / 2
-                        //scale:2
-                        fillMode: Image.PreserveAspectCrop
-                        source:"qrc:/res/bullet.png"
+            text:qsTr("Wait : %1 sec").arg(reloadtime)
+
+
+            height:parent.height
+            width: parent.width
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment : Text.AlignVCenter
+
+            font.pixelSize: globals.ui.textXL
+            color: "red"
+            minimumPixelSize: globals.ui.minimumPixelSize
+            fontSizeMode : Text.Fit
+
+            Timer{
+                id:timer
+                interval:1000
+                triggeredOnStart: true
+                running:false
+                repeat:true
+
+
+                onRunningChanged: {
+                    weapon.enabled = !running;
+                }
+
+                onTriggered: {
+                    if (parent.reloadtime > 0)
+                        parent.reloadtime--;
+                    else{
+                        running = false;
                     }
                 }
             }
         }
+    }
+    Component{
+        id: weaponDelegate
 
-        SPSProgressBar{
-            width: parent.width
-            height: parent.height * 0.4
-            anchors.margins: Math.min( 5, parent.height * 0.1)
-            anchors.top: imgWeapon.bottom
-            value: weapon.percChanceToSucceed
-            visible : weapon.enabled
-            prefixText : "Shoot : "
-            color : "darkgrey"
-            foregroundColor : "green"
-        }
-        MouseArea{
-            anchors.fill: parent
-            enabled: weapon.enabled
-            onClicked:{
-                var rand = Math.random() *100;
+        Item{
+            id:weaponItem
+            width: weapon.width
+            height: weapon.height
+            //anchors.fill : parent
+            anchors.margins: Math.min( 10, parent.height * 0.1)
+            enabled : ( percChanceToSucceed > 0) && (remainingAmmo >0)
+            property int percChanceToSucceed : globals.currentTarget.distance <= model.minDistance ? 100 :
+                                               globals.currentTarget.distance > model.maxDistance ? 0 :
+                                               100 - ((globals.currentTarget.distance - model.minDistance) / ( model.maxDistance - model.minDistance) * 100)
+            property int remainingAmmo : model.ammoType === 1 ? globals.stuff.gunAmmonition :
+                                         model.ammoType === 2 ? globals.stuff.shotgunAmmonition :
+                                         model.ammoType === 3 ? globals.stuff.riffleAmmonition :
+                                         model.ammoType === 0 ? globals.stuffModel.get(model.idStuffModel).quantity : 0
+            property var currentData : model
 
-                globals.sounds.shoot.play();
-                globals.stuff.gunAmmonition--;
+            Image{
+                id:imgWeapon
+                anchors.left : parent.left
+                width: parent.width * 0.5
+                height: parent.height * 0.7
+                source: imageWeapon
+                visible:weaponItem.enabled
+                fillMode : Image.PreserveAspectFit
+            }
 
-                //TODO : implement criticial success, critical failure
-                if ( rand <= weapon.percChanceToSucceed)
-                {
-                    notificationBox.showMessage("Great shoot!",10);
-                    gameManager.shoot(rightRoot.targetId);
-
-                }
-                else{
-                    notificationBox.showMessage("Too bad...You missed your shoot !",11);
-
-                }
-
-
+            ColorOverlay {
+                anchors.fill: imgWeapon
+                anchors.margins: Math.min( 15, parent.height * 0.1)
+                source: imgWeapon
+                color: "grey"
+                visible : !weaponItem.enabled
 
             }
-        }
 
+            Item{
+                id:ammoCartridge
+                anchors.left: imgWeapon.right
+                height: imgWeapon.height
+                width: parent.width * 0.4
+                Grid{
+                    //rowSpacing : Math.min( 30, height * 0.01)
+                    //columnSpacing: Math.min( 20, height * 0.01)
+                    spacing : 1//Math.min( 5, height * 0.01)
+                    rows : model.maxAmmo / columns
+                    columns : 5
+                    anchors.fill: parent
+                    anchors.margins: 1//Math.min( 15, height * 0.1)
+                    Repeater{
+                        model:weaponItem.remainingAmmo <= weaponItem.currentData.maxAmmo ? weaponItem.remainingAmmo : weaponItem.remainingAmmo % (weaponItem.currentData.maxAmmo)
+                        Image{
+                            width: ammoCartridge.width / 6
+                            height: ammoCartridge.height / 2
+                            //scale:2
+                            //fillMode: Image.PreserveAspectCrop
+                            fillMode : Image.PreserveAspectFit
+                            source: weaponItem.currentData.imageAmmo
+                        }
+                    }
+                }
+            }
+
+            SPSProgressBar{
+                width: parent.width * 0.8
+                height: parent.height * 0.15
+                anchors.margins: Math.min( 10, parent.height * 0.5)
+                anchors.top: imgWeapon.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                value: weaponItem.percChanceToSucceed
+                prefixText : qsTr("Shoot : ")
+                color : "darkgrey"
+                foregroundColor : "green"
+            }
+            MouseArea{
+                anchors.fill: parent
+                enabled: weaponItem.enabled
+                onClicked:{
+                    var rand = Math.random() *100;
+                    globals.sounds.shoot.source = model.sound
+                    globals.sounds.shoot.play();
+
+                    remainingTime.reloadtime = 3;
+                    timer.restart();
+
+                    switch (model.ammoType)
+                    {
+                    case 0:
+                        globals.stuffModel.setProperty(model.idStuffModel, "quantity", globals.stuffModel.get(model.idStuffModel).quantity -1);
+                        break;
+                    case 1:
+                        globals.stuff.gunAmmonition--;
+                        break;
+                    case 2 :
+                        globals.stuff.shotgunAmmonition--;
+                        break;
+                    case 3 :
+                        globals.stuff.riffleAmmonition--;
+                        break;
+                    }
+
+                    //TODO : implement criticial success, critical failure
+                    if ( rand <= weaponItem.percChanceToSucceed)
+                    {
+                        weaponEvent.showMessage(qsTr("Great shoot!"),10);
+                        gameManager.shoot( globals.currentTarget.id );
+
+                    }
+                    else{
+                        weaponEvent.showMessage(qsTr("Too bad...You missed your shoot !"),11);
+
+                    }
+
+
+
+                }
+            }
+
+        }
     }
 
+    ListView{
+        id:lstView
+        anchors.fill : parent
+        model :  globals.weaponModel
+        spacing : 5
+        clip : lstView
 
+        snapMode: ListView.SnapOneItem
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        orientation: ListView.Horizontal
+
+        delegate: weaponDelegate
+    }
+
+    EventBox{
+        id:weaponEvent
+        anchors.fill:parent
+        anchors.margins: parent.height *0.1
+        z:50
+    }
 }
 
 

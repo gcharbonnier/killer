@@ -96,7 +96,7 @@ Rectangle {
         Text{
             height:100
             width:100
-            text:"distance to current selection" + lstTarget.currentItem.currentData.Distance
+            text:qsTr("distance to current selection %1 m").arg( lstTarget.currentItem.currentData.Distance)
         }
 
         Rectangle{
@@ -123,7 +123,7 @@ Rectangle {
             Text{
                 anchors.centerIn: weapon
                 visible: weapon.enabled
-                text:"Shoot !"
+                text:qsTr("Shoot !")
                 font.pixelSize: globals.ui.textXL
                 color: globals.ui.textcolor
             }

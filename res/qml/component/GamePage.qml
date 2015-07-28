@@ -1,4 +1,5 @@
 import QtQuick 2.4
+import "../../../GameLogic.js" as EquipmentAction
 
 Item {
 
@@ -41,10 +42,10 @@ Item {
     Connections {
         target: gameManager
         onKilledBy: {
-            notificationBox.showMessage("You have been shooted by "+killer,21);
-            if (globals.perso.health < 0)
+            notificationBox.showMessage(qsTr("You have been shooted by %1").arg(killer),21);
+            if (globals.perso.health <= 0)
             {
-                notificationBox.displayMessage("You have been killed by "+killer,100);
+                notificationBox.displayMessage(qsTr("You have been killed by %1").arg(killer),100);
 
             }
         }
@@ -52,15 +53,39 @@ Item {
             //notificationBox.color="green";
             //notificationBox.text="You killed "+victim;
         }
+
+        onGameStarted:{
+            EquipmentAction.startGame();//loadPlayerData();
+            pleaseWait.visible = false;
+        }
+        onGameStopped:{
+            EquipmentAction.stopGame();//savePlayerData();
+        }
     }
     Connections {
         target: playerModel
         onNewPlayer: {
-            notificationBox.showMessage(playerName + " joined the campaign !",1);
+            notificationBox.showMessage(qsTr("%1 joined the campaign !").arg(playerName),1);
         }
         onPlayerLeave:{
-            notificationBox.showMessage(playerName + " left the campaign !",1);
+            notificationBox.showMessage(qsTr("%1 left the campaign !").arg(playerName),1);
         }
+    }
+
+    Connections {
+        target: geoLocalItemsModel
+        onBonusItemFound: {
+            if (Type == 0)
+                EquipmentAction.modifyEnergy(value);
+                //globals.perso.energy += value;
+            else if (Type == 1)
+                EquipmentAction.modifyHealth(value);
+                //globals.perso.health += value;
+            else if (Type == 2)
+                globals.perso.credits += value;
+            globals.sounds.energy.play();
+        }
+
     }
 
     EventBox{

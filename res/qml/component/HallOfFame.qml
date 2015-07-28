@@ -1,5 +1,7 @@
 import QtQuick 2.4
 
+import "../../../GameLogic.js" as EquipmentAction
+
 Item{
     anchors.fill: parent
 
@@ -33,12 +35,36 @@ Item{
             color: globals.ui.background
 
 
+
+            /*
+            SPSButtonText{
+                width: parent.width * 0.4
+                height: Math.min(100,parent.height *0.1)
+                anchors.left: parent.left
+                anchors.bottom : parent.top
+                text:"XP-"
+                onClicked:{
+                    EquipmentAction.modifyXP(-100);
+                }
+            }
+
+            SPSButtonText{
+                width: parent.width * 0.4
+                height: Math.min(100,parent.height *0.1)
+                anchors.right: parent.right
+                anchors.bottom : parent.top
+                text:"XP+"
+                onClicked:{
+                    EquipmentAction.modifyXP(100);
+                }
+            }
+            */
             ListView{
                 id: lstview
                 clip:lstview
                 anchors.fill: parent
                 anchors.margins: 2
-                model:accountModel
+                model: geoLocalItemsModel//playerModel //accountModel
 
                 //onCountChanged:positionViewAtEnd()
                 Component.onCompleted: positionViewAtEnd()
@@ -50,7 +76,7 @@ Item{
                     spacing: 5
 
                     //Component.onCompleted: lstview.positionViewAtEnd()
-                    Text{
+                    /*Text{
                         //date time
                         text: model.DateTime
                         color:"white"
@@ -65,6 +91,30 @@ Item{
                     Text{
                         text: model.Type === 0 ? model.MessageContent : model.NameEmitter +" : " + "@" + model.NameRecipient +" "+model.MessageContent
                         color : model.Type === 0 ? "white" : "blue"
+                        width: parent.width * 0.8
+                        height: parent.height
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment : Text.AlignVCenter
+
+                        font.pixelSize: globals.ui.textM
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                    }*/
+                    /*Text{
+                        text: model.NamePlayer + " - Lat:" + model.Latitude + " long:"+model.Longitude+ " Hdg:"+model.Azimuth
+                        color : "white"
+                        width: parent.width * 0.8
+                        height: parent.height
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment : Text.AlignVCenter
+
+                        font.pixelSize: globals.ui.textM
+                        minimumPixelSize: globals.ui.minimumPixelSize
+                        fontSizeMode : Text.Fit
+                    }*/
+                    Text{
+                        text: model.Type + " - Lat:" + model.Latitude + " long:"+model.Longitude+ " Hdg:"+model.Azimuth
+                        color : "white"
                         width: parent.width * 0.8
                         height: parent.height
                         horizontalAlignment: Text.AlignLeft

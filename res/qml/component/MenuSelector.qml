@@ -114,7 +114,7 @@ Rectangle{
                 }
                 Text
                 {
-                    text: "Quit campaign"
+                    text: qsTr("Quit campaign")
                     enabled: parent.enabled
                     anchors.fill: parent
                     anchors.margins: globals.ui.buttonMargin

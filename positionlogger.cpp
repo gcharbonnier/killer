@@ -42,7 +42,7 @@ bool PositionLogger::start()
     }
     else{
         //write default position (dev)
-        m_lastPosition = QGeoPositionInfo( QGeoCoordinate(47.096412, -1.636881, 8), QDateTime::currentDateTime());
+        positionUpdated( QGeoPositionInfo( QGeoCoordinate(47.096412, -1.636881, 8), QDateTime::currentDateTime()) );
         log();
     }
 
@@ -51,6 +51,7 @@ bool PositionLogger::start()
 
 bool PositionLogger::stop()
 {
+    bool bValid = false;
     if (m_pPosSource)
     {
         m_pPosSource->stopUpdates();
@@ -58,7 +59,10 @@ bool PositionLogger::stop()
         m_magnetometer->stop();
         m_orientation->setActive(false);
         m_magnetometer->setActive(false);
+
+        bValid = true;
     }
+    return bValid;
 }
 
 
@@ -113,7 +117,7 @@ void PositionLogger::onMagnetoReadingChanged()
 
 void PositionLogger::changeAxis( qreal& X, qreal& Y, qreal& Z, int Orient)
 {
-    qreal newX, newY, newZ;
+    qreal newX = 0, newY= 0, newZ = 0;
     switch (Orient)
     {
         case QOrientationReading::LeftUp:
@@ -159,19 +163,31 @@ qreal PositionLogger::computeHeading( qreal AccX, qreal AccZ)
 
 void PositionLogger::positionUpdated(const QGeoPositionInfo &info)
 {
-    emit positionChanged();
     m_lastPosition = info;
+    if ( (m_offsetLatitude != 0) ||  (m_offsetLongitude != 0))
+    {
+        QGeoCoordinate offsetedCoord = m_lastPosition.coordinate();
+        offsetedCoord.setLatitude( offsetedCoord.latitude() + m_offsetLatitude);
+        offsetedCoord.setLongitude( offsetedCoord.longitude() + m_offsetLongitude);
+        m_lastPosition.setCoordinate( offsetedCoord);
+    }
+    m_gameData.setLastPosition( m_lastPosition );
+    emit positionChanged();
     log();
 }
 
 QString PositionLogger::constructPositionQuery(uint id_account, double latitude, double longitude, double altitude, double heading)
 {
-    QString str = QString("REPLACE INTO `geo_players` (`ID_ACCOUNT`, `LATITUDE`, `LONGITUDE`, `ALTITUDE`, `HEADING`) VALUES ( '%1', %2, %3, %4, %5)")
-            .arg( id_account)
+    QString str = QString("UPDATE  `simplisim_dejavu`.`geo_players` SET  `LATITUDE` =  '%1',\
+                          `LONGITUDE` =  '%2', \
+                          `ALTITUDE` =  '%3', \
+                          `HEADING` =  '%4' \
+                          WHERE  `geo_players`.`ID_ACCOUNT` =%5;")
             .arg( latitude)
             .arg( longitude)
             .arg( altitude)
-            .arg( heading);
+            .arg( heading)
+            .arg( id_account);
 
     return str;
 }
@@ -191,7 +207,7 @@ bool PositionLogger::log()
 
     }
 
-    m_gameData.setLastPosition( m_lastPosition );
+
 
     return true;
 }

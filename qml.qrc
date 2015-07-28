@@ -64,5 +64,29 @@
         <file>res/fail.png</file>
         <file>res/killed.png</file>
         <file>res/qml/component/HallOfFame.qml</file>
+        <file>res/energy.png</file>
+        <file>res/audio/currency.wav</file>
+        <file>res/qml/component/SkillButton.qml</file>
+        <file>res/steal.png</file>
+        <file>res/heal.png</file>
+        <file>res/work.png</file>
+        <file>res/ammo_riffle.png</file>
+        <file>res/ammo_shootgun.png</file>
+        <file>res/medikit.png</file>
+        <file>res/shotgun.png</file>
+        <file>res/missile.png</file>
+        <file>res/portal.png</file>
+        <file>killer_fr.qm</file>
+        <file>GameLogic.js</file>
+        <file>res/audio/shotgun.wav</file>
+        <file>res/audio/missile.wav</file>
+        <file>res/repair.png</file>
+        <file>res/build.png</file>
+        <file>res/teach.png</file>
+        <file>res/avoid.png</file>
+        <file>res/appbar.magnify.minus.png</file>
+        <file>res/appbar.magnify.add.png</file>
+        <file>res/qml/component/PleaseWait.qml</file>
+        <file>res/pleasewait.png</file>
     </qresource>
 </RCC>
